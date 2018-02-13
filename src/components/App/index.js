@@ -3,6 +3,7 @@ import AddTask from "../AddTask";
 import Filter from "../Filter";
 import ListOfTasks from "../ListOfTasks";
 import { Container, Header } from "semantic-ui-react";
+import items from '../../data/todos';
 
 export default class App extends Component {
   render() {
@@ -13,7 +14,7 @@ export default class App extends Component {
         </Header>
         <AddTask />
         <Filter />
-        <ListOfTasks />
+        <ListOfTasks items={items} />
       </Container>
     );
   }
