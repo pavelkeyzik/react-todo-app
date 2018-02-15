@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import { Table, Checkbox } from "semantic-ui-react";
-import * as moment from "moment";
+import { Table } from "semantic-ui-react";
+import Task from "../Task";
 
 export default class ListOfTasks extends Component {
   state = {
@@ -9,29 +9,7 @@ export default class ListOfTasks extends Component {
   };
 
   render() {
-    const { items } = this.props;
-
-    if (this.state.sortField !== false) {
-      let direction = this.state.sortDirection === "ascending" ? 1 : -1;
-
-      items.sort((a, b) => {
-        let prop = this.state.sortField;
-
-        if (typeof a[prop] === "string") {
-          a[prop].toString();
-          b[prop].toString();
-        }
-
-        if (a[prop] < b[prop]) {
-          return -1 * direction;
-        }
-        if (a[prop] > b[prop]) {
-          return 1 * direction;
-        }
-
-        return 0;
-      });
-    }
+    const { todos } = this.props;
 
     return (
       <Table celled sortable striped>
@@ -80,17 +58,8 @@ export default class ListOfTasks extends Component {
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          {items.map(item => (
-            <Table.Row key={item.id}>
-              <Table.Cell>
-                {item.done ? <Checkbox checked /> : <Checkbox />}
-              </Table.Cell>
-              <Table.Cell>{item.text}</Table.Cell>
-              <Table.Cell>{item.priority}</Table.Cell>
-              <Table.Cell>
-                {moment(item.date).format("DD.MM.YYYY HH:mm:ss")}
-              </Table.Cell>
-            </Table.Row>
+          {todos.map(todo => (
+            <Task key={todo.id} data={todo} setDone={this.props.setDone} />
           ))}
         </Table.Body>
       </Table>
