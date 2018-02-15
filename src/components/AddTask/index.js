@@ -1,11 +1,5 @@
 import React, { Component } from "react";
-import {
-  Form,
-  Button,
-  TextArea,
-  Input,
-  Select
-} from "semantic-ui-react";
+import { Form, Button, TextArea, Input, Select } from "semantic-ui-react";
 
 export default class AddTask extends Component {
   render() {
@@ -29,20 +23,51 @@ export default class AddTask extends Component {
         <h3>Add Task</h3>
         <Form>
           <Form.Group widths="equal">
-            <Form.Field control={Input} placeholder="Title" />
             <Form.Field
+              name="title"
+              onChange={this.handleChange}
+              control={Input}
+              placeholder="Title"
+            />
+            <Form.Field
+              name="priority"
+              onChange={this.handleChange}
               control={Select}
               options={options}
               placeholder="Priority"
             />
-            <Form.Field control={Select} options={options} placeholder="Date" />
+            <Form.Field
+              name="date"
+              onChange={this.handleChange}
+              control={Select}
+              options={options}
+              placeholder="Date"
+            />
           </Form.Group>
-          <Form.Field control={TextArea} placeholder="Description..." />
+          <Form.Field
+            name="description"
+            onChange={this.handleChange}
+            control={TextArea}
+            placeholder="Description..."
+          />
           <Form.Group>
-            <Button content="Add" fluid primary />
+            <Button onClick={this.handleSubmit} content="Add" fluid primary />
           </Form.Group>
         </Form>
       </div>
     );
   }
+
+  handleChange = (event, element) => {
+    this.setState({
+      [element.name]: element.value
+    });
+  };
+
+  handleSubmit = () => {
+    const { title, priority, date, description } = this.state;
+    let data = { title, priority, date, description };
+
+    this.props.onAddClick(data);
+  };
 }

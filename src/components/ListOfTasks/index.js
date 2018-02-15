@@ -1,8 +1,11 @@
 import React, { Component } from "react";
-import { Table, Checkbox } from "semantic-ui-react";
+import { Table } from "semantic-ui-react";
+import Task from "../Task";
 
 export default class ListOfTasks extends Component {
   render() {
+    const { todos } = this.props;
+
     return (
       <Table celled sortable striped>
         <Table.Header>
@@ -14,38 +17,9 @@ export default class ListOfTasks extends Component {
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          <Table.Row>
-            <Table.Cell>
-              <Checkbox />
-            </Table.Cell>
-            <Table.Cell>Create TodoApp</Table.Cell>
-            <Table.Cell>High</Table.Cell>
-            <Table.Cell>12.12.2017</Table.Cell>
-          </Table.Row>
-          <Table.Row>
-            <Table.Cell>
-              <Checkbox />
-            </Table.Cell>
-            <Table.Cell>Sleed</Table.Cell>
-            <Table.Cell>Low</Table.Cell>
-            <Table.Cell>23.12.2017</Table.Cell>
-          </Table.Row>
-          <Table.Row>
-            <Table.Cell>
-              <Checkbox />
-            </Table.Cell>
-            <Table.Cell>Have a rest</Table.Cell>
-            <Table.Cell>Medium</Table.Cell>
-            <Table.Cell>14.12.2017</Table.Cell>
-          </Table.Row>
-          <Table.Row>
-            <Table.Cell>
-              <Checkbox checked />
-            </Table.Cell>
-            <Table.Cell>Visit lesson</Table.Cell>
-            <Table.Cell>High</Table.Cell>
-            <Table.Cell>09.12.2017</Table.Cell>
-          </Table.Row>
+          {todos.map(todo => (
+            <Task key={todo.id} data={todo} setDone={this.props.setDone} />
+          ))}
         </Table.Body>
       </Table>
     );
