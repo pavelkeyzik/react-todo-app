@@ -5,6 +5,7 @@ import ListOfTasks from "../ListOfTasks";
 import { Container, Header } from "semantic-ui-react";
 import "react-datepicker/dist/react-datepicker.css";
 import Api from "../../utils/api";
+import moment from "moment";
 
 export default class App extends Component {
   api = new Api();
@@ -12,7 +13,11 @@ export default class App extends Component {
   state = {
     todos: this.api.getTodos(),
     sortField: false,
-    sortDirection: "ascending"
+    sortDirection: "ascending",
+    showCompleted: false,
+    dateFrom: moment().subtract(1, "day"),
+    dateTo: moment(),
+    description: ""
   };
 
   render() {
@@ -22,12 +27,17 @@ export default class App extends Component {
           <Header.Content>React ToDo App</Header.Content>
         </Header>
         <AddTask onAddClick={this.handleAdd} />
-        <Filter />
+        <Filter
+          showCompleted={this.state.showCompleted}
+          dateFrom={this.state.dateFrom}
+          dateTo={this.state.dateTo}
+          onFilter={this.handleFilter}
+        />
         <ListOfTasks
           sortField={this.state.sortField}
           sortDirection={this.state.sortDirection}
           onSort={this.handleSort}
-          todos={this.state.todos}
+          todos={this.getTodos()}
           setDone={this.handleDone}
         />
       </Container>
@@ -61,5 +71,38 @@ export default class App extends Component {
         sortField: fieldNumber
       });
     }
+  };
+
+  handleFilter = (field, value) => {
+    if (field === "showCompleted") {
+      this.setState({
+        [field]: !this.state.showCompleted
+      });
+    } else {
+      this.setState({
+        [field]: value
+      });
+    }
+  };
+
+  getTodos = () => {
+    let todos = this.state.todos;
+
+    if (this.state.showCompleted) {
+      let query = this.state.description.toLowerCase();
+
+      todos = todos.filter(item => {
+        if (
+          item.title.toLowerCase().includes(query) ||
+          item.description.toLowerCase().includes(query)
+        ) {
+          return true;
+        }
+
+        return false;
+      });
+    }
+
+    return todos;
   };
 }
