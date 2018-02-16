@@ -10,6 +10,7 @@ export default class Api {
   addTodo(todo) {
     todo.id = new Date().getTime().toString();
     todo.done = false;
+    if (!todo.description) todo.description = "";
     this._todos.push(todo);
     this._saveData();
   }
