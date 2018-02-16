@@ -3,13 +3,16 @@ import AddTask from "../AddTask";
 import Filter from "../Filter";
 import ListOfTasks from "../ListOfTasks";
 import { Container, Header } from "semantic-ui-react";
+import "react-datepicker/dist/react-datepicker.css";
 import Api from "../../utils/api";
 
 export default class App extends Component {
   api = new Api();
 
   state = {
-    todos: this.api.getTodos()
+    todos: this.api.getTodos(),
+    sortField: false,
+    sortDirection: "ascending"
   };
 
   render() {
@@ -20,7 +23,13 @@ export default class App extends Component {
         </Header>
         <AddTask onAddClick={this.handleAdd} />
         <Filter />
-        <ListOfTasks todos={this.state.todos} setDone={this.handleDone} />
+        <ListOfTasks
+          sortField={this.state.sortField}
+          sortDirection={this.state.sortDirection}
+          onSort={this.handleSort}
+          todos={this.state.todos}
+          setDone={this.handleDone}
+        />
       </Container>
     );
   }
@@ -39,5 +48,18 @@ export default class App extends Component {
     this.setState({
       todos: this.api.getTodos()
     });
+  };
+
+  handleSort = fieldNumber => {
+    if (this.state.sortField === fieldNumber) {
+      this.setState({
+        sortDirection:
+          this.state.sortDirection === "ascending" ? "descending" : "ascending"
+      });
+    } else {
+      this.setState({
+        sortField: fieldNumber
+      });
+    }
   };
 }

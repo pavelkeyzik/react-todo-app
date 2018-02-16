@@ -3,13 +3,29 @@ import { Table } from "semantic-ui-react";
 import Task from "../Task";
 
 export default class ListOfTasks extends Component {
-  state = {
-    sortField: false,
-    sortDirection: "ascending"
-  };
-
   render() {
     const { todos } = this.props;
+
+    if (this.props.sortField !== false) {
+      let direction = this.props.sortDirection === "ascending" ? 1 : -1;
+      todos.sort((a, b) => {
+        let prop = this.props.sortField;
+
+        if (typeof a[prop] === "string") {
+          a[prop].toString();
+          b[prop].toString();
+        }
+
+        if (a[prop] < b[prop]) {
+          return -1 * direction;
+        }
+        if (a[prop] > b[prop]) {
+          return 1 * direction;
+        }
+
+        return 0;
+      });
+    }
 
     return (
       <Table celled sortable striped>
@@ -17,41 +33,41 @@ export default class ListOfTasks extends Component {
           <Table.Row>
             <Table.HeaderCell
               sorted={
-                this.state.sortField === "done"
-                  ? this.state.sortDirection
+                this.props.sortField === "done"
+                  ? this.props.sortDirection
                   : null
               }
-              onClick={this.sortBy.bind(null, "done")}
+              onClick={this.props.onSort.bind(null, "done")}
             >
               Done
             </Table.HeaderCell>
             <Table.HeaderCell
               sorted={
-                this.state.sortField === "text"
-                  ? this.state.sortDirection
+                this.props.sortField === "title"
+                  ? this.props.sortDirection
                   : null
               }
-              onClick={this.sortBy.bind(null, "text")}
+              onClick={this.props.onSort.bind(null, "title")}
             >
               Title
             </Table.HeaderCell>
             <Table.HeaderCell
               sorted={
-                this.state.sortField === "priority"
-                  ? this.state.sortDirection
+                this.props.sortField === "priority"
+                  ? this.props.sortDirection
                   : null
               }
-              onClick={this.sortBy.bind(null, "priority")}
+              onClick={this.props.onSort.bind(null, "priority")}
             >
               Priority
             </Table.HeaderCell>
             <Table.HeaderCell
               sorted={
-                this.state.sortField === "date"
-                  ? this.state.sortDirection
+                this.props.sortField === "date"
+                  ? this.props.sortDirection
                   : null
               }
-              onClick={this.sortBy.bind(null, "date")}
+              onClick={this.props.onSort.bind(null, "date")}
             >
               Date
             </Table.HeaderCell>
@@ -65,17 +81,4 @@ export default class ListOfTasks extends Component {
       </Table>
     );
   }
-
-  sortBy = fieldNumber => {
-    if (this.state.sortField === fieldNumber) {
-      this.setState({
-        sortDirection:
-          this.state.sortDirection === "ascending" ? "descending" : "ascending"
-      });
-    } else {
-      this.setState({
-        sortField: fieldNumber
-      });
-    }
-  };
 }
