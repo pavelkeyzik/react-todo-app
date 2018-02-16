@@ -1,7 +1,13 @@
 import React, { Component } from "react";
 import { Form, Button, TextArea, Input, Select } from "semantic-ui-react";
+import moment from "moment";
+import DatePicker from "react-datepicker";
 
 export default class AddTask extends Component {
+  state = {
+    date: moment()
+  };
+
   render() {
     const options = [
       {
@@ -36,12 +42,10 @@ export default class AddTask extends Component {
               options={options}
               placeholder="Priority"
             />
-            <Form.Field
+            <DatePicker
               name="date"
+              selected={this.state.date}
               onChange={this.handleChange}
-              control={Select}
-              options={options}
-              placeholder="Date"
             />
           </Form.Group>
           <Form.Field
@@ -59,6 +63,16 @@ export default class AddTask extends Component {
   }
 
   handleChange = (event, element) => {
+    if (
+      element.target &&
+      element.target.classList.contains("react-datepicker__day")
+    ) {
+      this.setState({
+        date: moment(event)
+      });
+      return;
+    }
+
     this.setState({
       [element.name]: element.value
     });
@@ -67,6 +81,7 @@ export default class AddTask extends Component {
   handleSubmit = () => {
     const { title, priority, date, description } = this.state;
     let data = { title, priority, date, description };
+    data.date = moment(data.date).format("DD.MM.YYYY");
 
     this.props.onAddClick(data);
   };
