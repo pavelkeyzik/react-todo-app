@@ -93,8 +93,10 @@ export default class App extends Component {
 
       todos = todos.filter(item => {
         if (
-          item.title.toLowerCase().includes(query) ||
-          item.description.toLowerCase().includes(query)
+          (item.title.toLowerCase().includes(query) ||
+            item.description.toLowerCase().includes(query)) &&
+          (moment(item.date, "DD.MM.YYYY").isAfter(this.state.dateFrom) &&
+            moment(item.date, "DD.MM.YYYY").isBefore(this.state.dateTo))
         ) {
           return true;
         }
