@@ -5,7 +5,9 @@ import DatePicker from "react-datepicker";
 
 export default class AddTask extends Component {
   state = {
-    date: moment()
+    date: moment(),
+    isHasTitle: false,
+    title: ""
   };
 
   render() {
@@ -27,18 +29,20 @@ export default class AddTask extends Component {
     return (
       <div>
         <h3>Add Task</h3>
-        <Form>
+        <Form onSubmit={this.handleSubmit}>
           <Form.Group widths="equal">
             <Form.Field
               name="title"
               onChange={this.handleChange}
               control={Input}
+              value={this.state.title}
               placeholder="Title"
             />
             <Form.Field
               name="priority"
               onChange={this.handleChange}
               control={Select}
+              value={this.state.priority}
               options={options}
               placeholder="Priority"
             />
@@ -50,12 +54,19 @@ export default class AddTask extends Component {
           </Form.Group>
           <Form.Field
             name="description"
+            value={this.state.description}
             onChange={this.handleChange}
             control={TextArea}
             placeholder="Description..."
           />
           <Form.Group>
-            <Button onClick={this.handleSubmit} content="Add" fluid primary />
+            <Button
+              type="submit"
+              content="Add"
+              fluid
+              primary
+              disabled={!this.state.isHasTitle}
+            />
           </Form.Group>
         </Form>
       </div>
@@ -73,6 +84,10 @@ export default class AddTask extends Component {
       return;
     }
 
+    if (element.name === "title") {
+      this.checkTitle(element.value);
+    }
+
     this.setState({
       [element.name]: element.value
     });
@@ -83,6 +98,25 @@ export default class AddTask extends Component {
     let data = { title, priority, date, description };
     data.date = moment(data.date).format("DD.MM.YYYY");
 
+    this.setState({
+      title: "",
+      priority: "",
+      description: ""
+    });
+
+    this.setState({ isHasTitle: false });
     this.props.onAddClick(data);
+  };
+
+  checkTitle = title => {
+    if (title.length > 0) {
+      this.setState({
+        isHasTitle: true
+      });
+    } else {
+      this.setState({
+        isHasTitle: false
+      });
+    }
   };
 }
