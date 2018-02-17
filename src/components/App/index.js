@@ -10,15 +10,20 @@ import moment from "moment";
 export default class App extends Component {
   api = new Api();
 
-  state = {
-    todos: this.api.getTodos(),
-    sortField: false,
-    sortDirection: "ascending",
-    showCompleted: false,
-    dateFrom: moment().subtract(1, "day"),
-    dateTo: moment(),
-    description: ""
-  };
+  constructor() {
+    super();
+    this.filterData = this.api.getFilterData();
+    console.log(this.filterData);
+    this.state = {
+      todos: this.api.getTodos(),
+      sortField: this.filterData.sortField,
+      sortDirection: this.filterData.sortDirection,
+      showCompleted: this.filterData.showCompleted,
+      dateFrom: this.filterData.dateFrom,
+      dateTo: this.filterData.dateTo,
+      description: this.filterData.description
+    };
+  }
 
   render() {
     return (
@@ -31,6 +36,7 @@ export default class App extends Component {
           showCompleted={this.state.showCompleted}
           dateFrom={this.state.dateFrom}
           dateTo={this.state.dateTo}
+          description={this.state.description}
           onFilter={this.handleFilter}
         />
         <ListOfTasks
@@ -66,10 +72,12 @@ export default class App extends Component {
         sortDirection:
           this.state.sortDirection === "ascending" ? "descending" : "ascending"
       });
+      this.api.setFilterData("sortDirection", fieldNumber);
     } else {
       this.setState({
         sortField: fieldNumber
       });
+      this.api.setFilterData("sortField", fieldNumber);
     }
   };
 
@@ -83,27 +91,52 @@ export default class App extends Component {
         [field]: value
       });
     }
+
+    this.api.setFilterData(field, value);
   };
 
   getTodos = () => {
     let todos = this.state.todos;
 
-    if (this.state.showCompleted) {
-      let query = this.state.description.toLowerCase();
+    let query = this.state.description.toLowerCase();
 
-      todos = todos.filter(item => {
+    todos = todos.filter(item => {
+      if (!this.state.showCompleted && item.done) return false;
+      if (
+        item.title.toLowerCase().includes(query) ||
+        item.description.toLowerCase().includes(query)
+      ) {
         if (
-          (item.title.toLowerCase().includes(query) ||
-            item.description.toLowerCase().includes(query)) &&
-          (moment(item.date, "DD.MM.YYYY").isAfter(this.state.dateFrom) &&
-            moment(item.date, "DD.MM.YYYY").isBefore(this.state.dateTo))
+          this.state.dateFrom === undefined &&
+          this.state.dateTo !== undefined &&
+          moment(item.date, "DD.MM.YYYY").isBefore(this.state.dateTo)
+        ) {
+          return true;
+        }
+        if (
+          this.state.dateTo === undefined &&
+          this.state.dateFrom !== undefined &&
+          moment(item.date, "DD.MM.YYYY").isAfter(this.state.dateFrom)
+        ) {
+          return true;
+        }
+        if (
+          this.state.dateFrom === undefined &&
+          this.state.dateTo === undefined
         ) {
           return true;
         }
 
-        return false;
-      });
-    }
+        if (
+          moment(item.date, "DD.MM.YYYY").isSameOrAfter(this.state.dateFrom) &&
+          moment(item.date, "DD.MM.YYYY").isSameOrBefore(this.state.dateTo)
+        ) {
+          return true;
+        }
+      }
+
+      return false;
+    });
 
     return todos;
   };
