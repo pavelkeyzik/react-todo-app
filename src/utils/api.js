@@ -60,9 +60,6 @@ export default class Api {
   }
 
   setFilterData(field, value) {
-    if (moment.isMoment(value)) {
-      console.log("IS MOMENT");
-    }
     this._filterData[field] = value;
     this._saveFilterData();
   }

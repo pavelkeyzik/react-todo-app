@@ -13,7 +13,6 @@ export default class App extends Component {
   constructor() {
     super();
     this.filterData = this.api.getFilterData();
-    console.log(this.filterData);
     this.state = {
       todos: this.api.getTodos(),
       sortField: this.filterData.sortField,
@@ -72,7 +71,7 @@ export default class App extends Component {
         sortDirection:
           this.state.sortDirection === "ascending" ? "descending" : "ascending"
       });
-      this.api.setFilterData("sortDirection", fieldNumber);
+      this.api.setFilterData("sortDirection", this.state.sortDirection);
     } else {
       this.setState({
         sortField: fieldNumber
