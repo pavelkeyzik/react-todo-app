@@ -1,6 +1,9 @@
+import moment from "moment";
+
 export default class Api {
   constructor() {
     this._todos = this._getData();
+    this._filterData = this._getFilterData();
   }
 
   getTodos() {
@@ -27,5 +30,44 @@ export default class Api {
 
   _saveData() {
     localStorage.setItem("todos", JSON.stringify(this._todos));
+  }
+
+  _getFilterData() {
+    let data = JSON.parse(localStorage.getItem("filterData"));
+
+    if (data) {
+      if (data.dateFrom) {
+        data.dateFrom = moment(data.dateFrom);
+      }
+      if (data.dateTo) {
+        data.dateTo = moment(data.dateTo);
+      }
+      return data;
+    }
+
+    return {
+      sortField: false,
+      sortDirection: "ascending",
+      showCompleted: true,
+      dateFrom: undefined,
+      dateTo: undefined,
+      description: ""
+    };
+  }
+
+  _saveFilterData() {
+    localStorage.setItem("filterData", JSON.stringify(this._filterData));
+  }
+
+  setFilterData(field, value) {
+    if (moment.isMoment(value)) {
+      console.log("IS MOMENT");
+    }
+    this._filterData[field] = value;
+    this._saveFilterData();
+  }
+
+  getFilterData() {
+    return this._filterData;
   }
 }

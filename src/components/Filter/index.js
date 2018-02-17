@@ -30,6 +30,7 @@ export default class Filter extends Component {
           <Form.Field
             name="description"
             onChange={this.handleChange}
+            value={this.props.description}
             control={Input}
             placeholder="Text search (title + description)"
           />

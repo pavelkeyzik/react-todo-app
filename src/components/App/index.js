@@ -10,15 +10,20 @@ import moment from "moment";
 export default class App extends Component {
   api = new Api();
 
-  state = {
-    todos: this.api.getTodos(),
-    sortField: false,
-    sortDirection: "ascending",
-    showCompleted: true,
-    dateFrom: undefined,
-    dateTo: undefined,
-    description: ""
-  };
+  constructor() {
+    super();
+    this.filterData = this.api.getFilterData();
+    console.log(this.filterData);
+    this.state = {
+      todos: this.api.getTodos(),
+      sortField: this.filterData.sortField,
+      sortDirection: this.filterData.sortDirection,
+      showCompleted: this.filterData.showCompleted,
+      dateFrom: this.filterData.dateFrom,
+      dateTo: this.filterData.dateTo,
+      description: this.filterData.description
+    };
+  }
 
   render() {
     return (
@@ -31,6 +36,7 @@ export default class App extends Component {
           showCompleted={this.state.showCompleted}
           dateFrom={this.state.dateFrom}
           dateTo={this.state.dateTo}
+          description={this.state.description}
           onFilter={this.handleFilter}
         />
         <ListOfTasks
@@ -66,10 +72,12 @@ export default class App extends Component {
         sortDirection:
           this.state.sortDirection === "ascending" ? "descending" : "ascending"
       });
+      this.api.setFilterData("sortDirection", fieldNumber);
     } else {
       this.setState({
         sortField: fieldNumber
       });
+      this.api.setFilterData("sortField", fieldNumber);
     }
   };
 
@@ -83,6 +91,8 @@ export default class App extends Component {
         [field]: value
       });
     }
+
+    this.api.setFilterData(field, value);
   };
 
   getTodos = () => {
