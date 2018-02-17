@@ -14,9 +14,9 @@ export default class App extends Component {
     todos: this.api.getTodos(),
     sortField: false,
     sortDirection: "ascending",
-    showCompleted: false,
-    dateFrom: moment().subtract(1, "day"),
-    dateTo: moment(),
+    showCompleted: true,
+    dateFrom: undefined,
+    dateTo: undefined,
     description: ""
   };
 
@@ -88,22 +88,45 @@ export default class App extends Component {
   getTodos = () => {
     let todos = this.state.todos;
 
-    if (this.state.showCompleted) {
-      let query = this.state.description.toLowerCase();
+    let query = this.state.description.toLowerCase();
 
-      todos = todos.filter(item => {
+    todos = todos.filter(item => {
+      if (!this.state.showCompleted && item.done) return false;
+      if (
+        item.title.toLowerCase().includes(query) ||
+        item.description.toLowerCase().includes(query)
+      ) {
         if (
-          (item.title.toLowerCase().includes(query) ||
-            item.description.toLowerCase().includes(query)) &&
-          (moment(item.date, "DD.MM.YYYY").isAfter(this.state.dateFrom) &&
-            moment(item.date, "DD.MM.YYYY").isBefore(this.state.dateTo))
+          this.state.dateFrom === undefined &&
+          this.state.dateTo !== undefined &&
+          moment(item.date, "DD.MM.YYYY").isBefore(this.state.dateTo)
+        ) {
+          return true;
+        }
+        if (
+          this.state.dateTo === undefined &&
+          this.state.dateFrom !== undefined &&
+          moment(item.date, "DD.MM.YYYY").isAfter(this.state.dateFrom)
+        ) {
+          return true;
+        }
+        if (
+          this.state.dateFrom === undefined &&
+          this.state.dateTo === undefined
         ) {
           return true;
         }
 
-        return false;
-      });
-    }
+        if (
+          moment(item.date, "DD.MM.YYYY").isSameOrAfter(this.state.dateFrom) &&
+          moment(item.date, "DD.MM.YYYY").isSameOrBefore(this.state.dateTo)
+        ) {
+          return true;
+        }
+      }
+
+      return false;
+    });
 
     return todos;
   };
