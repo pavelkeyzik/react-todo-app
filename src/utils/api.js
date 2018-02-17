@@ -67,4 +67,18 @@ export default class Api {
   getFilterData() {
     return this._filterData;
   }
+
+  saveEditedData(id, data) {
+    let index = this._todos.map(element => element.id).indexOf(id);
+
+    for (let x in data) {
+      if (moment.isMoment(data[x])) {
+        this._todos[index][x] = moment(data[x]).format("DD.MM.YYYY");
+        break;
+      }
+      this._todos[index][x] = data[x];
+    }
+
+    this._saveData();
+  }
 }

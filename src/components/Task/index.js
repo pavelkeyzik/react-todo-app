@@ -6,7 +6,7 @@ export default class Task extends Component {
     const { data } = this.props;
 
     return (
-      <Table.Row>
+      <Table.Row onDoubleClick={this.props.clicked}>
         <Table.Cell
           onClick={this.props.setDone.bind(null, data.id, !data.done)}
         >

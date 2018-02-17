@@ -6,6 +6,7 @@ import { Container, Header } from "semantic-ui-react";
 import "react-datepicker/dist/react-datepicker.css";
 import Api from "../../utils/api";
 import moment from "moment";
+import EditingModal from "../EditingModal";
 
 export default class App extends Component {
   api = new Api();
@@ -20,13 +21,21 @@ export default class App extends Component {
       showCompleted: this.filterData.showCompleted,
       dateFrom: this.filterData.dateFrom,
       dateTo: this.filterData.dateTo,
-      description: this.filterData.description
+      description: this.filterData.description,
+      showEditingModal: false
     };
   }
 
   render() {
     return (
       <Container>
+        {this.state.showEditingModal && (
+          <EditingModal
+            closeEditingModal={this.closeEditingModal}
+            editingModalData={this.state.editingModalData}
+            saveEditedData={this.saveEditedData}
+          />
+        )}
         <Header as="h1" textAlign="center">
           <Header.Content>React ToDo App</Header.Content>
         </Header>
@@ -44,6 +53,7 @@ export default class App extends Component {
           onSort={this.handleSort}
           todos={this.getTodos()}
           setDone={this.handleDone}
+          onDblClick={this.handleEdit}
         />
       </Container>
     );
@@ -138,5 +148,25 @@ export default class App extends Component {
     });
 
     return todos;
+  };
+
+  handleEdit = item => {
+    this.setState({
+      showEditingModal: true,
+      editingModalData: item
+    });
+  };
+
+  closeEditingModal = () => {
+    this.setState({
+      showEditingModal: false,
+      editingModalData: {}
+    });
+  };
+
+  saveEditedData = (id, data) => {
+    this.api.saveEditedData(id, data);
+    this.updateData();
+    this.closeEditingModal();
   };
 }
