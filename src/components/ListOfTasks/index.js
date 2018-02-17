@@ -75,7 +75,12 @@ export default class ListOfTasks extends Component {
         </Table.Header>
         <Table.Body>
           {todos.map(todo => (
-            <Task key={todo.id} data={todo} setDone={this.props.setDone} />
+            <Task
+              clicked={this.props.onDblClick.bind(null, todo)}
+              key={todo.id}
+              data={todo}
+              setDone={this.props.setDone}
+            />
           ))}
         </Table.Body>
       </Table>
