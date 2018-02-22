@@ -81,4 +81,11 @@ export default class Api {
 
     this._saveData();
   }
+
+  removeTask(id) {
+    let index = this._todos.map(element => element.id).indexOf(id);
+
+    this._todos.splice(index, 1);
+    this._saveData();
+  }
 }

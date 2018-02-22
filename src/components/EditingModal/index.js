@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import {
+import ButtonContent, {
   Button,
   Header,
   Icon,
@@ -99,19 +99,28 @@ export default class EditingModal extends Component {
           </Form>
         </Modal.Content>
         <Modal.Actions>
+          <Button color="red" float="left" onClick={this.removeTask}>
+            <Button.Content>
+              <Icon name="trash" /> Remove task
+            </Button.Content>
+          </Button>
           {this.state.done ? (
             <Button color="grey" onClick={this.closeModal}>
               Close modal
             </Button>
           ) : (
-            <div>
-              <Button color="red" onClick={this.closeModal}>
-                <Icon name="remove" /> Cancel edit
+            [
+              <Button key="cancelButton" onClick={this.closeModal}>
+                <Icon name="cancel" /> Cancel edit
+              </Button>,
+              <Button
+                key="saveButton"
+                color="green"
+                onClick={this.saveEditedData}
+              >
+                <Icon name="save" /> Save edited
               </Button>
-              <Button color="green" onClick={this.saveEditedData}>
-                <Icon name="checkmark" /> Save edited
-              </Button>
-            </div>
+            ]
           )}
         </Modal.Actions>
       </Modal>
@@ -164,5 +173,9 @@ export default class EditingModal extends Component {
     };
 
     this.props.saveEditedData(this.id, data);
+  };
+
+  removeTask = () => {
+    this.props.removeTask(this.id);
   };
 }

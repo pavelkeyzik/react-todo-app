@@ -34,6 +34,7 @@ export default class App extends Component {
             closeEditingModal={this.closeEditingModal}
             editingModalData={this.state.editingModalData}
             saveEditedData={this.saveEditedData}
+            removeTask={this.removeTask}
           />
         )}
         <Header as="h1" textAlign="center">
@@ -166,6 +167,12 @@ export default class App extends Component {
 
   saveEditedData = (id, data) => {
     this.api.saveEditedData(id, data);
+    this.updateData();
+    this.closeEditingModal();
+  };
+
+  removeTask = id => {
+    this.api.removeTask(id);
     this.updateData();
     this.closeEditingModal();
   };
