@@ -78,7 +78,6 @@ export default class Api {
       }
       this._todos[index][x] = data[x];
     }
-
     this._saveData();
   }
 

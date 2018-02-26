@@ -12,7 +12,12 @@ export default class Task extends Component {
         >
           {data.done ? <Checkbox checked /> : <Checkbox />}
         </Table.Cell>
-        <Table.Cell>{data.title}</Table.Cell>
+        <Table.Cell
+          data-tooltip={data.description || "No description"}
+          data-inverted
+        >
+          {data.title}
+        </Table.Cell>
         <Table.Cell>{data.priority}</Table.Cell>
         <Table.Cell>{data.date}</Table.Cell>
       </Table.Row>
