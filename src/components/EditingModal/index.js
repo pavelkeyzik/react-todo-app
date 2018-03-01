@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import ButtonContent, {
+import {
   Button,
   Header,
   Icon,

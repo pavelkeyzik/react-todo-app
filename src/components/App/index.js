@@ -7,6 +7,8 @@ import "react-datepicker/dist/react-datepicker.css";
 import Api from "../../utils/api";
 import moment from "moment";
 import EditingModal from "../EditingModal";
+import CarList from "../../containers/car-list";
+import Details from "../../containers/details";
 
 export default class App extends Component {
   api = new Api();
@@ -28,35 +30,40 @@ export default class App extends Component {
 
   render() {
     return (
-      <Container>
-        {this.state.showEditingModal && (
-          <EditingModal
-            closeEditingModal={this.closeEditingModal}
-            editingModalData={this.state.editingModalData}
-            saveEditedData={this.saveEditedData}
-            removeTask={this.removeTask}
-          />
-        )}
-        <Header as="h1" textAlign="center">
-          <Header.Content>React ToDo App</Header.Content>
-        </Header>
-        <AddTask onAddClick={this.handleAdd} />
-        <Filter
-          showCompleted={this.state.showCompleted}
-          dateFrom={this.state.dateFrom}
-          dateTo={this.state.dateTo}
-          description={this.state.description}
-          onFilter={this.handleFilter}
-        />
-        <ListOfTasks
-          sortField={this.state.sortField}
-          sortDirection={this.state.sortDirection}
-          onSort={this.handleSort}
-          todos={this.getTodos()}
-          setDone={this.handleDone}
-          onDblClick={this.handleEdit}
-        />
-      </Container>
+      <div>
+        <CarList />
+        <hr />
+        <Details />
+      </div>
+      // <Container>
+      //   {this.state.showEditingModal && (
+      //     <EditingModal
+      //       closeEditingModal={this.closeEditingModal}
+      //       editingModalData={this.state.editingModalData}
+      //       saveEditedData={this.saveEditedData}
+      //       removeTask={this.removeTask}
+      //     />
+      //   )}
+      //   <Header as="h1" textAlign="center">
+      //     <Header.Content>React ToDo App</Header.Content>
+      //   </Header>
+      //   <AddTask onAddClick={this.handleAdd} />
+      //   <Filter
+      //     showCompleted={this.state.showCompleted}
+      //     dateFrom={this.state.dateFrom}
+      //     dateTo={this.state.dateTo}
+      //     description={this.state.description}
+      //     onFilter={this.handleFilter}
+      //   />
+      //   <ListOfTasks
+      //     sortField={this.state.sortField}
+      //     sortDirection={this.state.sortDirection}
+      //     onSort={this.handleSort}
+      //     todos={this.getTodos()}
+      //     setDone={this.handleDone}
+      //     onDblClick={this.handleEdit}
+      //   />
+      // </Container>
     );
   }
 
